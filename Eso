@@ -1,34 +1,49 @@
-class CircularQueue:
-    def __init__(self, max_size):
-        self.max_size = max_size
-        self.queue = [None] * max_size
-        self.head = 0
-        self.tail = 0
-        self.size = 0
+class Queue:
+    def __init__(self):
+        self.queue = []
 
     def enqueue(self, e):
-        if self.size == self.max_size:
-            raise Exception("Cola llena...")
-        self.queue[self.tail] = e
-        self.tail = (self.tail + 1) % self.max_size
-        self.size += 1
+        # agregar un elemento e a la cola
+        self.queue.append(e)
 
     def dequeue(self):
-        if self.size == 0:
+        # remueve y retorna el primer elemento
+        if self.is_empty():
             raise Exception("Cola vacía...")
-        e = self.queue[self.head]
-        self.queue[self.head] = None
-        self.head = (self.head + 1) % self.max_size
-        self.size -= 1
-        return e
+        return self.queue.pop(0)
 
     def first(self):
-        if self.size == 0:
+        # retornar el primer elemento de la cola
+        if self.is_empty():
             raise Exception("Cola vacía...")
-        return self.queue[self.head]
+        return self.queue[0]
 
     def is_empty(self):
-        return self.size == 0
+        return len(self.queue) == 0
 
-    def __len__(self):
-        return self.size
+    def __len__(self):  # dunder method
+        # retorna tamaño
+        return len(self.queue)
+
+    def invertir_cola(self):
+        if self.is_empty():
+            return self
+
+        elemento = self.dequeue()
+        self.invertir_cola()
+        self.enqueue(elemento)
+
+    def invertir_mitad_izquierda(self):
+        # Obtener la mitad de la cola
+        mitad = len(self) // 2
+
+        # Invertir solo la mitad de la cola
+        for i in range(mitad):
+            self.enqueue(self.dequeue())
+
+        self.invertir_cola()
+
+        # Insertar los elementos de la mitad invertida de vuelta en la cola
+        for i in range(mitad):
+            self.enqueue(self.dequeue())
+
